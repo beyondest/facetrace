@@ -7,6 +7,7 @@ import platform
 import sys
 from pathlib import Path
 import cv2
+from sympy import true
 import torch
 import img_operation as imo
 from numpy import array
@@ -51,6 +52,8 @@ def myrun(
         half=False,  # use FP16 half-precision inference
         dnn=False,  # use OpenCV DNN for ONNX inference
         vid_stride=1,  # video frame-rate stride
+        draw_img=True,
+        hide_labels=False
         ):
     '''return img ,rec_list,\n
     img is drawed all recs,rec_list[0]=[point0,point1]'''
@@ -121,10 +124,10 @@ def myrun(
                     c = int(cls)  # integer class
                     label = names[c] if hide_conf else f'{names[c]}'
                     confidence = float(conf)
-                    '''if save_img or save_crop or view_img:  # Add bbox to image
+                    if draw_img :  # Add bbox to image
                         c = int(cls)  # integer class
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
-                        annotator.box_label(xyxy, label, color=colors(c, True))'''
+                        annotator.box_label(xyxy, label, color=colors(c, True))
                     
                     point0,point1=(int(xyxy[0]),int(xyxy[1])),(int(xyxy[2]),int(xyxy[3]))
                     
@@ -132,6 +135,7 @@ def myrun(
                     
             
             im0 = annotator.result()
+            
             
             # Save results (image with detections)
   
@@ -144,7 +148,7 @@ def myrun(
 
     if update:
         strip_optimizer(weights[0])  # update model (to fix SourceChangeWarning)
-    return dia_list
+    return im0,dia_list
 
 
 

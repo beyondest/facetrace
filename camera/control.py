@@ -3,7 +3,7 @@
 
 '''notice that exposure_time is us !!!'''
 
-import mvsdk
+from . import mvsdk
 import cv2
 import numpy as np
 import platform

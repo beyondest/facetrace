@@ -59,8 +59,8 @@ class myloadimgs:
         # Read image
         self.count += 1
         im0 = self.img
-        s = 'whatfuck'
-        path='/home/liyuxuan/vscode/whatcaonima'
+        s = ''
+        path=''
         if self.transforms:
             im = self.transforms(im0)  # transforms
         else:
@@ -101,8 +101,9 @@ class PIDtrace:
     
 def draw_pid_vector(img:np.ndarray,act,pid_value):
     act,pid_value=check_and_change_shape(act,pid_value,(2,1))
-    start_point=act.astype(np.uint16)
-    end_point=(act+pid_value).astype(np.uint16)
+    start_point=[int(act[0]),int(act[1])]
+    end_point=act+pid_value
+    end_point=[int(end_point[0]),int(end_point[1])]
     cv2.arrowedLine(img,start_point,end_point,(128,255,128))
     return img
     
