@@ -10,7 +10,8 @@ from camera import mvsdk
 
 
 
-weights_path='best.pt'
+facew='face.pt'
+yolov5s='yolov5s.pt'
 img_path='people.jpg'
 
 process_imgsz=(640,640)
@@ -41,7 +42,7 @@ while (cv2.waitKey(1) & 0xFF) != 27:
     dst=control.grab_img(hcamera,pframebuffer_address)
     
     dst=cv2.resize(dst,process_imgsz,interpolation=cv2.INTER_LINEAR)
-    dst,dia_list=mydetect.myrun(source=dst,weights=weights_path,draw_img=True)
+    dst,dia_list=mydetect.myrun(source=dst,weights=yolov5s,draw_img=True,classes=0)
     
     if len(dia_list)>0:
     
