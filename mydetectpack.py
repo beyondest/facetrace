@@ -71,53 +71,7 @@ class myloadimgs:
         return path, im, im0, s  
     
     
-class PIDtrace:
-    '''
-    input must be np.ndarray
-    input  current_vector(matrix is also ok) and dim_target\n
-    output vector ,direction and size is calculated by pid
-    '''
-    def __init__(self,kp,ki,kd,shape) :
-        self.kp=kp
-        self.kd=kd
-        self.ki=ki
-        self.shape=shape
-        self.error=np.zeros(shape)
-        self.integral=np.zeros(shape)
-        self.diff=np.zeros(shape)
-        self.pre_error=np.zeros(shape)
-    def update(self,act,exp):
-        '''
-        act=actual_value=star_location\n
-        exp=expectation=target_location
-        '''
-        act,exp=check_and_change_shape(act,exp,self.shape)
-        self.error=exp-act
-        self.integral+=self.error
-        self.diff=self.error-self.pre_error
-        self.pre_error=self.error
-        pid_value=self.kp*self.error+self.ki*self.integral+self.kd*self.diff
-        return pid_value
-    
-def draw_pid_vector(img:np.ndarray,act,pid_value):
-    act,pid_value=check_and_change_shape(act,pid_value,(2,1))
-    start_point=[int(act[0]),int(act[1])]
-    end_point=act+pid_value
-    end_point=[int(end_point[0]),int(end_point[1])]
-    cv2.arrowedLine(img,start_point,end_point,(128,255,128))
-    return img
-    
-    
-
-
-def check_and_change_shape(x,y,shape:tuple)->np.ndarray:
-    '''input list or np.ndarray,return np.ndarray'''
-    
-    x=np.reshape(x,shape)
-    y=np.reshape(y,shape)
-    return x,y
-    
-        
+     
         
          
   

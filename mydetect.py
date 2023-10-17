@@ -134,7 +134,7 @@ def myrun(
                     dia_list.append([point0,point1])
                     
             
-            im0 = annotator.result()
+            #im0 = annotator.result()
             
             
             # Save results (image with detections)
@@ -157,31 +157,6 @@ def myrun(
 
 
 #check_requirements(ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
-
-def drawrec_and_getcenter(dia_list,ori_img):
-    '''return drawed_img, center\n
-    find biggest area face'''
-
-    bigest_area=0
-    recinfo_list=[]
-    index=0
-
-    #search biggest area rec
-    for i in range(len(dia_list)):
-        
-        recinfo_list.append(imo.getdia_info(dia_list[i][0],dia_list[i][1]))
-        if bigest_area<recinfo_list[i][5]:
-            bigest_area=recinfo_list[i][5]
-            index=i
-
-    final_center=[int(recinfo_list[index][0]),int(recinfo_list[index][1])]
-
-    final_reccont=recinfo_list[index][4]
-    img_copy=ori_img.copy()
-
-    cv2.drawContours(img_copy,[final_reccont],-1,color=(128,128,255))
-    cv2.circle(img_copy,final_center,10,(255,128,128),-1)
-    return img_copy,final_center
 
 
 

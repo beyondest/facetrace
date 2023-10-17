@@ -1366,4 +1366,79 @@ def getdia_info(pt0,pt1,angle=0):
         c_x,c_y,w,h,rec_cont,rec_area=getrec_info(np.array([pt0,pt1,pt2,pt3]))
         return c_x,c_y,w,h,rec_cont,rec_area
     
+
+#***********************for yolov5************************#
+def drawrec_and_getcenter(dia_list,ori_img):
+    '''return drawed_img, center\n
+    find biggest area face'''
+
+    bigest_area=0
+    recinfo_list=[]
+    index=0
+
+    #search biggest area rec
+    for i in range(len(dia_list)):
         
+        recinfo_list.append(getdia_info(dia_list[i][0],dia_list[i][1]))
+        if bigest_area<recinfo_list[i][5]:
+            bigest_area=recinfo_list[i][5]
+            index=i
+
+    final_center=[int(recinfo_list[index][0]),int(recinfo_list[index][1])]
+
+    final_reccont=recinfo_list[index][4]
+    img_copy=ori_img.copy()
+
+    cv2.drawContours(img_copy,[final_reccont],-1,color=(128,128,255))
+    cv2.circle(img_copy,final_center,10,(255,128,128),-1)
+    return img_copy,final_center
+
+
+
+class PIDtrace:
+    '''
+    input must be np.ndarray
+    input  current_vector(matrix is also ok) and dim_target\n
+    output vector ,direction and size is calculated by pid
+    '''
+    def __init__(self,kp,ki,kd,shape) :
+        self.kp=kp
+        self.kd=kd
+        self.ki=ki
+        self.shape=shape
+        self.error=np.zeros(shape)
+        self.integral=np.zeros(shape)
+        self.diff=np.zeros(shape)
+        self.pre_error=np.zeros(shape)
+    def update(self,act,exp):
+        '''
+        act=actual_value=star_location\n
+        exp=expectation=target_location
+        '''
+        act,exp=check_and_change_shape(act,exp,self.shape)
+        self.error=exp-act
+        self.integral+=self.error
+        self.diff=self.error-self.pre_error
+        self.pre_error=self.error
+        pid_value=self.kp*self.error+self.ki*self.integral+self.kd*self.diff
+        return pid_value
+    
+def draw_pid_vector(img:np.ndarray,act,pid_value):
+    act,pid_value=check_and_change_shape(act,pid_value,(2,1))
+    start_point=[int(act[0]),int(act[1])]
+    end_point=act+pid_value
+    end_point=[int(end_point[0]),int(end_point[1])]
+    cv2.arrowedLine(img,start_point,end_point,(128,255,128))
+    return img
+    
+    
+
+
+def check_and_change_shape(x,y,shape:tuple)->np.ndarray:
+    '''input list or np.ndarray,return np.ndarray'''
+    
+    x=np.reshape(x,shape)
+    y=np.reshape(y,shape)
+    return x,y
+    
+       

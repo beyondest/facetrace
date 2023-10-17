@@ -10,14 +10,14 @@ from camera import mvsdk
 
 
 
-facew='face.pt'
+weights='armor.pt'
 yolov5s='yolov5s.pt'
 img_path='people.jpg'
 
 process_imgsz=(640,640)
 camera_center=np.array([320,320])
 
-kp=0.01
+kp=1
 ki=0.01
 kd=0.01
 pid_shape=(2,1)
@@ -53,6 +53,7 @@ while (cv2.waitKey(1) & 0xFF) != 27:
     #out.write(dst)
     cv2.circle(dst,camera_center.astype(np.uint16),10,(125,125,255),-1)
     cv2.imshow('press esc to end',dst)
+    cv2.imwrite()
     
     
 cv2.destroyAllWindows()
