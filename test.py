@@ -4,6 +4,7 @@ from sympy import true
 import mydetect as md
 import mydetectpack as mp
 import cv2
+#ffffff
 img=cv2.imread(path)
 img,dia_list=md.myrun(weights=path2,source=img,draw_img=True)
 cv2.imshow('fu',img)
